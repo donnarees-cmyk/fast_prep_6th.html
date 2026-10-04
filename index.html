@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FAST Assessment Prep Simulator - 6th Grade</title>
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-hover: #1d4ed8;
+            --success: #15803d;
+            --error: #b91c1c;
+            --bg: #0f172a;
+            --card-bg: #1e293b;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+        }
+
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            background-color: var(--bg);
+            color: var(--text-main);
+            line-height: 1.6;
+            padding: 20px;
+            margin: 0;
+        }
+
+        .simulator-container {
+            max-width: 1000px;
+            margin: 20px auto;
+            background: var(--card-bg);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+            border: 1px solid #334155;
+        }
+
+        .header {
+            background: #111827;
+            padding: 15px 20px;
+            border-bottom: 2px solid var(--primary);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .badge {
+            background-color: #1e3a8a;
+            color: #38bdf8;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            font-weight: bold;
+            border: 1px solid #0369a1;
+        }
+
+        .workspace {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            height: 600px;
+        }
+
+        @media (max-width: 768px) {
+            .workspace { grid-template-columns: 1fr; height: auto; }
+        }
+
+        .panel {
+            padding: 25px;
+            overflow-y: auto;
+            height: 100%;
+            box-sizing: border-box;
+        }
+
+        .left-panel {
+            border-right: 1px solid #334155;
+            background: #152033;
+        }
+
+        .right-panel {
+            background: #1e293b;
+        }
+
+        h2 { margin-top: 0; color: #38bdf8; font-size: 1.4rem; }
+        
+        /* Hot Text Styling */
+        .hot-text {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px dashed #475569;
+            padding: 4px 8px;
+            margin: 4px 0;
+            border-radius: 4px;
+            display: block;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .hot-text:hover {
+            background: rgba(56, 189, 248, 0.1);
+            border-color: var(--primary);
+        }
+
+        .hot-text.selected {
+            background: rgba(37, 99, 235, 0.3);
+            border-color: #60a5fa;
+            font-weight: 500;
+        }
+
+        .hot-text.correct-reveal {
+            background: rgba(21, 128, 61, 0.3) !important;
+            border-color: #4ade80 !important;
+        }
+
+        .hot-text.wrong-reveal {
+            background: rgba(185, 28, 28, 0.3) !important;
+            border-color: #f87171 !important;
+        }
+
+        .btn-check {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            font-size: 1rem;
+            font-weight: bold;
+            border-radius: 6px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 20px;
+            transition: background 0.2s;
+        }
+
+        .btn-check:hover { background: var(--primary-hover); }
+        .btn-check:disabled { background: #475569; cursor: not-allowed; }
+
+        .feedback-box {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 8px;
+            display: none;
+            font-weight: 500;
+        }
+        
+        .visible-correct { display: block; background: #14532d; border: 1px solid #22c55e; color: #bbf7d0; }
+        .visible-wrong { display: block; background: #7f1d1d; border: 1px solid #ef4444; color: #fecaca; }
+    </style>
+</head>
+<body>
+
+<div class="simulator-container">
+    <div class="header">
+        <span class="badge">FLORIDA B.E.S.T. ASSESSMENT MECHANIC • ELA.6.R.2.2</span>
+        <span style="font-weight: bold; color: var(--text-muted);">FAST Item Type: Selectable Hot Text</span>
+    </div>
+
+    <div class="workspace">
+        <!-- PASSAGE SIDE -->
+        <div class="panel left-panel">
+            <h2>Passage: The Glitch Generation</h2>
+            <p>Jax adjusted his headset as the countdown timer flashed on the stadium megascreen. Five years ago, esports tournaments were held in damp basements, laughed at by traditional athletic directors who claimed clicking a mouse wasn't a real talent.</p>
+            
+            <p>Today, the arena roared with fifty thousand screaming fans. Jax’s thumbs moved in a blur, executing a flawless defensive block that saved his digital squad from elimination. High school leagues across Florida now award formal athletic letters for competitive gaming, and state universities offer full-ride esports scholarships. The old arguments against digital athletes have completely crumbled under the weight of packed stadiums and academic validation.</p>
+        </div>
+
+        <!-- ASSESSMENT SIDE -->
+        <div class="panel right-panel">
+            <h2>Task Instructions</h2>
+            <p style="color: var(--text-muted); font-size: 0.95rem;">
+                Click directly on the **one sentence** from the passage on the left that best supports the central idea that **esports has achieved the same legitimacy as traditional sports**.
+            </p>
+
+            <!-- Interactive Hot Text Options Box -->
+            <div id="options-group">
+                <div class="hot-text" data-id="1" onclick="selectText(this)">
+                    "Five years ago, esports tournaments were held in damp basements, laughed at by traditional athletic directors who claimed clicking a mouse wasn't a real talent."
+                </div>
+                <div class="hot-text" data-id="2" onclick="selectText(this)">
+                    "Jax’s thumbs moved in a blur, executing a flawless defensive block that saved his digital squad from elimination."
+                </div>
+                <div class="hot-text" data-id="3" onclick="selectText(this)">
+                    "High school leagues across Florida now award formal athletic letters for competitive gaming, and state universities offer full-ride esports scholarships."
+                </div>
+            </div>
+
+            <button id="submit-btn" class="btn-check" onclick="checkHotText()" disabled>Submit Answer</button>
+            <div id="feedback" class="feedback-box"></div>
+        </div>
+    </div>
+</div>
+
+<script>
+    let activeSelection = null;
+
+    function selectText(element) {
+        // Clear previous selection visually
+        const items = document.querySelectorAll('.hot-text');
+        items.forEach(item => item.classList.remove('selected'));
+        
+        // Apply new selection
+        element.classList.add('selected');
+        activeSelection = element;
+        
+        // Enable check button
+        document.getElementById('submit-btn').disabled = false;
+    }
+
+    function checkHotText() {
+        if (!activeSelection) return;
+        
+        const selectedId = activeSelection.getAttribute('data-id');
+        const feedback = document.getElementById('feedback');
+        const submitBtn = document.getElementById('submit-btn');
+        
+        // Disable choices after submission
+        submitBtn.disabled = true;
+        document.querySelectorAll('.hot-text').forEach(item => {
+            item.onclick = null; // lock clicks
+        });
+
+        // Question logic (Option 3 is correct)
+        if (selectedId === "3") {
+            activeSelection.classList.add('correct-reveal');
+            feedback.className = "feedback-box visible-correct";
+            feedback.innerHTML = "🎯 <strong>Correct!</strong> Earning official varsity high school letters and receiving university college scholarships are concrete evidence of competitive gaming gaining institutional and athletic legitimacy.";
+        } else {
+            activeSelection.classList.add('wrong-reveal');
+            feedback.className = "feedback-box visible-wrong";
+            feedback.innerHTML = "❌ <strong>Incorrect.</strong> That line provides interesting context, but it does not prove institutional legitimacy. Look for the sentence describing real-world rewards (like varsity letters and college degrees) matching traditional sports.";
+            
+            // Auto-highlight correct answer for immediate remediation
+            document.querySelector('[data-id="3"]').classList.add('correct-reveal');
+        }
+    }
+</script>
+
+</body>
+</html>
